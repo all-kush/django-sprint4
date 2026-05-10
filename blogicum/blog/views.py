@@ -1,6 +1,5 @@
 from django.views.generic import (
-    DetailView, ListView, CreateView, UpdateView, DeleteView
-    )
+    DetailView, ListView, CreateView, UpdateView, DeleteView)
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -31,6 +30,7 @@ class IndexView(ListView):
 
     Выводятся пять последних публикаций.
     """
+
     model = Post
     template_name = 'blog/index.html'
 
@@ -46,6 +46,7 @@ class PostDetailView(DetailView):
 
     post_id: идентификатор поста.
     """
+
     model = Post
     template_name = 'blog/detail.html'
 
