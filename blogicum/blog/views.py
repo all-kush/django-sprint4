@@ -24,6 +24,18 @@ class OnlyAuthorMixin(UserPassesTestMixin):
         return object.author == self.request.user
 
 
+def paginate_queryset(request, queryset, posts_per_page=POSTS_ON_PAGE):
+    """
+    Пагинация.
+
+    Возвращает page_obj.
+    """
+
+    paginator = Paginator(queryset, posts_per_page)
+    page_number = request.GET.get('page')
+    return paginator.get_page(page_number)
+
+
 class IndexView(ListView):
     """
     Главная страница блога.
@@ -107,17 +119,14 @@ class ProfileView(DetailView):
                 comment_count=models.Count('comments')
             )
 
-        paginator = Paginator(posts_list, POSTS_ON_PAGE)
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context['page_obj'] = page_obj
+        context['page_obj'] = paginate_queryset(self.request, posts_list)
 
         return context
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
     model = User
-    fields = ['username', 'first_name', 'last_name', 'email']
+    fields = ('username', 'first_name', 'last_name', 'email')
     template_name = 'blog/user.html'
 
     def get_object(self):
